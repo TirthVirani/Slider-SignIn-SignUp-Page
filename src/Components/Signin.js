@@ -1,9 +1,30 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { Component} from 'react';
+// import { useNavigate } from 'react-router-dom';
 import styled, { keyframes } from "styled-components";
 import { useState } from 'react';
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import "firebase/compat/database";
+import 'firebase/compat/auth';
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDewvsTyJWKo1IIkMGpq27Wom5LlwG38uM",
+  authDomain: "signin-signup-page-5722b.firebaseapp.com",
+  databaseURL: "https://signin-signup-page-5722b-default-rtdb.firebaseio.com",
+  projectId: "signin-signup-page-5722b",
+  storageBucket: "signin-signup-page-5722b.appspot.com",
+  messagingSenderId: "861309290287",
+  appId: "1:861309290287:web:88afbab1abbbe03c6403da",
+  measurementId: "G-KBR6WL7NYZ"
+};
+
+if(!firebase.apps.lenght){
+  firebase.initializeApp(firebaseConfig);
+}
+
 const move = keyframes`
 0%{
     opacity:0;
@@ -47,7 +68,7 @@ const BackgroundBox = styled.div`
         top: 0%;
         text-align: center;
         z-index:${(props)=>(props.clicked?"-600":"500")};
-        transform:${(props)=>(props.clicked?"none":"translateX(-38%)")};
+        transform:${(props)=>(props.clicked?"none":"translateX(-39%)")};
         transition: all 1s;
     }
     .signup{
@@ -55,7 +76,7 @@ const BackgroundBox = styled.div`
         top: 0%;
         text-align: center;
         z-index:${(props)=>(props.clicked?"500":"-500")};
-        transform:${(props)=>(props.clicked?"translateX(53%)":"none")};
+        transform:${(props)=>(props.clicked?"translateX(56%)":"translateX(-10%)")};
         transition: all 1s;
 
         @media screen and (max-width:406px){
@@ -177,7 +198,7 @@ const Button = styled.button`
 
 const Title = styled.h1`
     font-size: 3.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 700;
 `;
@@ -185,7 +206,7 @@ const Title = styled.h1`
 const Link = styled.a`
     text-decoration: none;
     color: #fff;
-    font-size: 1.4rem;
+    font-size: 1.0rem;
     margin: 1rem 0;
 `;
 
@@ -216,45 +237,45 @@ const ButtonAnimate = styled.button`
 const ShowPass = styled.span`
     position: absolute;
     right: ${(props)=>(props.clicked ? "-60px" : "90px")};
-    top: ${(props)=>(props.clicked ? "0px" : "235px")};
+    top: ${(props)=>(props.clicked ? "0px" : "228px")};
     cursor: pointer;
     font-size: 1.5rem;
 
     @media screen and (max-width:769px){
-      top: ${(props)=>(props.clicked ? "0px" : "391px")};
+      top: ${(props)=>(props.clicked ? "0px" : "400px")};
     }
-    @media screen and (max-width:406px){
-      top: ${(props)=>(props.clicked ? "0px" : "257px")};
+    @media screen and (max-width:430px){
+      top: ${(props)=>(props.clicked ? "0px" : "249px")};
     }
 `;
 
 const ShowPass2 = styled.span`
     position: absolute;
     right: ${(props)=>(props.clicked ? "-60px" : "90px")};
-    top: 267px;
+    top: 265px;
     cursor: pointer;
     font-size: 1.5rem;
 
     @media screen and (max-width:769px){
-      top: 425px;
+      top: 435px;
     }
-    @media screen and (max-width:406px){
-      top: 290px;
+    @media screen and (max-width:430px){
+      top: 285px;
     }
 `;
 
 const ShowPass3 = styled.span`
     position: absolute;
     right: ${(props)=>(props.clicked ? "-60px" : "90px")};
-    top: 205px;
+    top: 193px;
     cursor: pointer;
     font-size: 1.5rem;
 
     @media screen and (max-width:769px){
-      top: 425px;
+      top: 366px;
     }
-    @media screen and (max-width:406px){
-      top: 225px;
+    @media screen and (max-width:430px){
+      top: 213px;
     }
 `;
 
@@ -293,19 +314,26 @@ const Div = styled.div`
     }
 `;
 
+const Signin = (props) => {
+    // const navigate = useNavigate();
+    
+    const handleSignIn = (e) => {
+        e.preventDefault();
+        // const email = e.target.email.value;
+        // const password = e.target.password.value;
+        // const registeredEmail = "tirthvirani77225@gmail.com"; // Replace with registered email
+        // const registeredPassword = "tirthvirani77225";
+        // if (email === registeredEmail && password === registeredPassword) {
+        //     alert("Sign-in successful");
+        //     e.target.reset();
+        //     navigate('/home');
+        // } else {
+        //     alert("Invalid credentials. Please try again.");
+        // }
+        props.login(e);
+    };
 
-const Signin = () => {
-  const navigate = useNavigate();
-
-  const handleSignIn = () => {
-    // Perform your sign-in logic here
-    // After successful sign-in, redirect to the home page
-    navigate('/home');
-  };
-
-
-
-  const [click, setClick] = useState(false);
+    const [click, setClick] = useState(false);
     const[showpassword,setShowPassword]=useState(false);
     const handleClick = () => setClick(!click);
     // eslint-disable-next-line no-unused-vars
@@ -315,75 +343,134 @@ const Signin = () => {
     }) 
 
     const handleOnChange =(e) =>{
-
         setFormData((prevData) =>({
             ...prevData,[e.target.name]:e.target.value
         }))
-
     }
 
+    return (
+        <Div>
+        <BackgroundBox clicked={click}> 
+                <ButtonAnimate clicked={click} onClick={handleClick}></ButtonAnimate>
+                <Form className='signin' onSubmit={handleSignIn}>
+                    <Title>Sign In</Title>
+                    <Input type='email' name='email' id='emailId' placeholder='Email address' autoComplete='off' required/>
+                    <Input type={showpassword ?"text" :"password"} name="password" onChange={handleOnChange} id='passwordId' placeholder='Password' autoComplete='off' required/>
+                    <ShowPass onClick={() =>setShowPassword((prev) =>!prev)}>
+                        {showpassword ?(
+                            <AiOutlineEyeInvisible fontSize={15} />
+                        ):(<AiOutlineEye fontSize={15}/>)}
+                    </ShowPass>
+                    <Link href="#">Forgot Your Password?</Link>
+                    <Button type='submit'>Sign In</Button>
+                    {/* onClick={handleSignIn} */}
+                </Form>
 
+                <Form className='signup'  onSubmit={props.register}>
+                    <Title>Sign Up</Title>
+                    <Input type='email' name='email' placeholder='Email address' autoComplete='off' required/>
+                    <Input type={showpassword ?"text" :"password"} name='password' onChange={handleOnChange} placeholder='Create Password' autoComplete='off' required/>
+                    <Input type={showpassword ?"text" :"password"} name='confirmPassword' onChange={handleOnChange} placeholder='Repeat Password' autoComplete='off' required/>
+                    <ShowPass2 onClick={() =>setShowPassword((prev) =>!prev)}>
+                        {showpassword ?(
+                            <AiOutlineEyeInvisible fontSize={15} />
+                        ):(<AiOutlineEye fontSize={15}/>)}
+                    </ShowPass2>
+                    <ShowPass3 onClick={() =>setShowPassword((prev) =>!prev)}>
+                        {showpassword ?(
+                            <AiOutlineEyeInvisible fontSize={15} />
+                        ):(<AiOutlineEye fontSize={15}/>)}
+                    </ShowPass3>
+                    <Link href="#" onClick={handleClick}>Already have an Account?</Link>
+                    <Button>Sign Up</Button>
+                </Form>
 
-  return (
-    <Div>
-      <BackgroundBox clicked={click}> 
-            <ButtonAnimate clicked={click} onClick={handleClick}></ButtonAnimate>
-            <Form className='signin'>
-                <Title>Sign In</Title>
-                <Input type='email' name='email' id='emailId' placeholder='Email address' autoComplete='off' required/>
-                <Input type={showpassword ?"text" :"password"} name="password" onChange={handleOnChange} id='passwordId' placeholder='Password' autoComplete='off' required/>
-                 <ShowPass onClick={() =>setShowPassword((prev) =>!prev)}>
-                    {showpassword ?(
-                        <AiOutlineEyeInvisible fontSize={15} />
-                    ):(<AiOutlineEye fontSize={15}/>)}
-                 </ShowPass>
-                <Link href="#">Forgot Your Password?</Link>
-                <Button onClick={handleSignIn}>Sign In</Button>
-            </Form>
+                <Text className='text1' clicked={click}>
+                    <h1>Welcome!</h1>
+                    Don't have an account?
+                    <br/>
+                    <span className="attention">Click Here</span>
+                    <span className="attention-icon">
+                    ⤶
+                    </span>
+                </Text>
 
-            <Form className='signup'>
-                <Title>Sign Up</Title>
-                <Input type='email' name='email' id='emailId' placeholder='Email address' autoComplete='off' required/>
-                <Input type={showpassword ?"text" :"password"} name='password' onChange={handleOnChange} placeholder='Create Password' autoComplete='off' required/>
-                <Input type={showpassword ?"text" :"password"} name='confirmPassword' onChange={handleOnChange} placeholder='Repeat Password' autoComplete='off' required/>
-                <ShowPass2 onClick={() =>setShowPassword((prev) =>!prev)}>
-                    {showpassword ?(
-                        <AiOutlineEyeInvisible fontSize={15} />
-                    ):(<AiOutlineEye fontSize={15}/>)}
-                 </ShowPass2>
-                 <ShowPass3 onClick={() =>setShowPassword((prev) =>!prev)}>
-                    {showpassword ?(
-                        <AiOutlineEyeInvisible fontSize={15} />
-                    ):(<AiOutlineEye fontSize={15}/>)}
-                 </ShowPass3>
-                <Link href="#" onClick={handleClick}>Already have an Account?</Link>
-                <Button>Sign Up</Button>
-            </Form>
-
-            <Text className='text1' clicked={click}>
-                <h1>Welcome!</h1>
-                Don't have an account?
-                <br/>
-                <span className="attention">Click Here</span>
-                <span className="attention-icon">
-                ⤶
-                </span>
-            </Text>
-
-            <Text className='text2' clicked={click}>
-                <h1>Hi There!</h1>
-                Already have an account?
-                <br/>
-                <span className="attention">Click Here</span>
-                <span className="attention-icon">
-                ⤷
-                </span>
-            </Text>
-            <Box1 clicked={click}/>
-            <Box2 clicked={click}/>
-        </BackgroundBox>
-    </Div>
-  );
+                <Text className='text2' clicked={click}>
+                    <h1>Hi There!</h1>
+                    Already have an account?
+                    <br/>
+                    <span className="attention">Click Here</span>
+                    <span className="attention-icon">
+                    ⤷
+                    </span>
+                </Text>
+                <Box1 clicked={click}/>
+                <Box2 clicked={click}/>
+            </BackgroundBox>
+        </Div>
+    );
 };
 
-export default Signin;
+class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+          //page = 0 (login), 1 = reguister
+            page:1,
+            message:"",
+          // 1 - success , 0 - error
+            type : 1,
+        }
+    }
+
+    registrationHandler = (event) => {
+        event.preventDefault();
+        const email = event.target.email.value;
+        const password = event.target.password.value;
+        const confirmPassword = event.target.confirmPassword.value;
+        this.setState({ email, password, confirmPassword }, () => console.log(this.state));
+        if(password !== confirmPassword){
+            alert("Password does not match...")
+            return;
+        }
+        const auth = firebase.auth();
+        const authPromise = auth.createUserWithEmailAndPassword(email, password);
+        authPromise.then((data) => {
+            auth.currentUser.sendEmailVerification();
+            this.setState(alert("Registed Successfully"),() => {
+                event.target.email.value = "";
+                event.target.password.value = "";
+                event.target.confirmPassword.value = "";
+          });
+        }).catch((error) => {
+            alert(error.message)
+        });
+    };
+    
+    loginHandler = (event) => {
+        event.preventDefault();
+        const auth = firebase.auth();
+        const email = event.target.email.value;
+        const password = event.target.password.value;
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then((data) =>{
+                if (data.user.emailVerified === true){
+                    alert("Login Successfully");
+                }else
+                    alert("Your email is not verified yet...");
+            }).catch((error) =>{
+                alert(error.message);
+            });
+    };
+    render() {
+        return (
+        <Signin type={this.state.type}
+            message={this.state.message} 
+            register={this.registrationHandler}
+            login={this.loginHandler}
+            history={this.props.history}></Signin>
+        )
+    }
+}
+export default App;
